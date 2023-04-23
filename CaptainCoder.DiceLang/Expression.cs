@@ -9,6 +9,7 @@ public class Class1
 public interface IValue
 {
     public int ToInt();
+    public string PrettyPrint();
 }
 
 public interface IExpression
@@ -21,6 +22,7 @@ public record IntValue(int Value) : IExpression, IValue
     public IValue Evaluate() => this;
 
     public int ToInt() => Value;
+    public string PrettyPrint() => Value.ToString();
 }
 
 public record DiceGroupExpression(int DiceCount, int SideCount, IRandom RandomSource) : IExpression
