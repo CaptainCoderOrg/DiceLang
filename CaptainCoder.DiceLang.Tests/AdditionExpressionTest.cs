@@ -15,8 +15,8 @@ public class AdditionExpressionTest
         
         AdditionExpression additionExpr = new (leftExpr, rightExpr);
 
-        Value result = additionExpr.Evaluate();
-        Value expected = new IntValue(21);
+        IValue result = additionExpr.Evaluate();
+        IValue expected = new IntValue(21);
         Assert.Equal(expected, result);
     }
 }

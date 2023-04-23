@@ -6,52 +6,67 @@ public class Class1
 
 }
 
-public interface Value
+public interface IValue
 {
-    public Value Add(Value other);
+    public int ToInt();
 }
 
-public interface Expression
+public interface IExpression
 {
-    public Value Evaluate();
+    public IValue Evaluate();
 }
 
-public record IntValue(int Value) : Expression, Value
+public record IntValue(int Value) : IExpression, IValue
 {
-    public Value Evaluate() => this;
+    public IValue Evaluate() => this;
 
-    public Value Add(Value other)
-    {
-        if (other is IntValue otherInt)
-        {
-            return new IntValue(Value + otherInt.Value);
-        }
-        throw new ArgumentException($"Cannot perform addition between {nameof(IntValue)} and {other.GetType()}");
-    }
+    public int ToInt() => Value;
 }
 
-public record DiceGroupExpression(int DiceCount, int SideCount, IRandom randomSource) : Expression
+public record DiceGroupExpression(int DiceCount, int SideCount, IRandom RandomSource) : IExpression
 {
     public static IRandom DefaultRandomSource { get; set; } = IRandom.Shared;
     public static DiceGroupExpression WithDefaultSource(int diceCount, int sideCount) => new (diceCount, sideCount, DefaultRandomSource);
-    public Value Evaluate()
+    public IValue Evaluate()
     {
         int sum = 0;
         for (int i = 0; i < DiceCount; i++)
         {
-            sum += randomSource.Next(0, SideCount) + 1;
+            sum += RandomSource.Next(0, SideCount) + 1;
         }
         return new IntValue(sum);
     }
 }
 
-public record AdditionExpression(Expression Left, Expression Right) : Expression
+public abstract record BinaryOperatorExpression(IExpression Left, IExpression Right) : IExpression
 {
-    public Value Evaluate()
+    
+    public IValue Evaluate()
     {
-        Value leftVal = Left.Evaluate();
-        Value rightVal = Right.Evaluate();
-        return leftVal.Add(rightVal);
+        IValue leftVal = Left.Evaluate();
+        IValue rightVal = Right.Evaluate();
+        return PerformOp(leftVal, rightVal);
     }
+
+    public abstract IValue PerformOp(IValue left, IValue right);
 }
 
+public sealed record AdditionExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
+{
+    public override IValue PerformOp(IValue left, IValue right) => new IntValue(left.ToInt() + right.ToInt());
+}
+
+public sealed record SubtractionExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
+{
+    public override IValue PerformOp(IValue left, IValue right) => new IntValue(left.ToInt() - right.ToInt());
+}
+
+public sealed record MultiplicationExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
+{
+    public override IValue PerformOp(IValue left, IValue right) => new IntValue(left.ToInt() * right.ToInt());
+}
+
+public sealed record DivisionExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
+{
+    public override IValue PerformOp(IValue left, IValue right) => new IntValue(left.ToInt() / right.ToInt());
+}
