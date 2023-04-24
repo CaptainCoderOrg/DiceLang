@@ -1,5 +1,8 @@
 ﻿using CaptainCoder.DiceLang;
 using Sprache;
+
+List<string> Commands = new ();
+
 // See https://aka.ms/new-console-template for more information
 Console.Clear();
 Console.WriteLine("DiceLang++ v0.0.0... Nothing works, be careful.");

@@ -91,3 +91,19 @@ public record EqualityExpression(IExpression Left, IExpression Right) : BinaryOp
 {
     public override IValue PerformOp(IValue left, IValue right) => new BoolValue(left.ToInt() == right.ToInt());
 }
+
+public record IfElseExpression(IExpression condition, IExpression trueExpr, IExpression falseExpr) : IExpression
+{
+    public IValue Evaluate()
+    {
+        IValue conditionResult = condition.Evaluate();
+        if (conditionResult.ToBool())
+        {
+            return trueExpr.Evaluate();
+        }
+        else
+        {
+            return falseExpr.Evaluate();
+        }
+    }
+}

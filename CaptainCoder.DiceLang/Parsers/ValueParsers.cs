@@ -4,13 +4,11 @@ namespace CaptainCoder.DiceLang;
 public static partial class Parsers
 {
     public static Parser<BoolValue> BoolValue =>
-        from leading in Parse.WhiteSpace.Many()
-        from value in Parse.String("true").Or(Parse.String("false"))
+        from value in Parse.String("true").Or(Parse.String("false")).Token()
         select new BoolValue(string.Join("", value) == "true");
 
     public static Parser<IntValue> IntValue =>
-        from leading in Parse.WhiteSpace.Many()
-        from value in Parse.Digit.AtLeastOnce()
+        from value in Parse.Digit.AtLeastOnce().Token()
         select new IntValue(int.Parse(string.Join("", value)));
 
     public static Parser<DiceGroupExpression> DiceGroupExpression =>

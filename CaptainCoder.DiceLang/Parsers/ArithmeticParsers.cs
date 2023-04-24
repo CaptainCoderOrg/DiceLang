@@ -3,59 +3,46 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
-    private static Parser<IEnumerable<char>> ParseRightSideOperator(char symbol)
-    {
-        return
-        from whiteSpace in Parse.WhiteSpace.Many()
-        from plusSymbol in Parse.Char(symbol)
-        from whiteSpace_ in Parse.WhiteSpace.Many()
-        select whiteSpace.Concat(new char[] { symbol }).Concat(whiteSpace_);
-    }
-
     // AddSubExpr ::= NumExpr [[+|-] AddSubExpr]
     public static Parser<IExpression> AddSubExpression =>
-        from leading in Parse.WhiteSpace.Many()
-        from leftSide in MulDivExpression
+        from leftSide in Tokenize(MulDivExpression)
         from remainingExpr in Parse.Optional(RightSideAddition(leftSide).Or(RightSideSubtraction(leftSide)))
         select remainingExpr.GetOrElse(leftSide);
 
-    private static Parser<IExpression> RightSideAddSubExpression(IExpression leftSide, char symbol, Func<IExpression, IExpression, IExpression> constructor)
+    private static Parser<IExpression> RightSideAddSubExpression(IExpression leftSide, string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return
-        from op in ParseRightSideOperator(symbol)
-        from factor in MulDivExpression
+        from factor in Tokenize(symbol, MulDivExpression)
         from optionalMany in Parse.Optional(RightSideAddition(factor).Or(RightSideSubtraction(factor)))
         select constructor(leftSide, optionalMany.GetOrElse(factor));
     }
 
     public static Parser<IExpression> RightSideAddition(IExpression leftSide) =>
-        RightSideAddSubExpression(leftSide, '+', (left, right) => new AdditionExpression(left, right));
+        RightSideAddSubExpression(leftSide, "+", (left, right) => new AdditionExpression(left, right));
 
     public static Parser<IExpression> RightSideSubtraction(IExpression leftSide) =>
-        RightSideAddSubExpression(leftSide, '-', (left, right) => new SubtractionExpression(left, right));
+        RightSideAddSubExpression(leftSide, "-", (left, right) => new SubtractionExpression(left, right));
 
-    private static Parser<IExpression> RightSideFactorOperator(IExpression leftSide, char symbol, Func<IExpression, IExpression, IExpression> constructor)
+    private static Parser<IExpression> RightSideFactorOperator(IExpression leftSide, string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return
-        from op in ParseRightSideOperator(symbol)
-        from factor in FactorExpression
+        from factor in Tokenize(symbol, FactorExpression)
         from optionalMany in Parse.Optional(RightSideMultiplication(constructor(leftSide, factor)).Or(RightSideDivision(constructor(leftSide, factor)))) //
         select optionalMany.GetOrElse(constructor(leftSide, factor));
     }
 
     public static Parser<IExpression> RightSideMultiplication(IExpression leftSide) =>
-        RightSideFactorOperator(leftSide, '*', (IExpression a, IExpression b) => new MultiplicationExpression(a, b));
+        RightSideFactorOperator(leftSide, "*", (IExpression a, IExpression b) => new MultiplicationExpression(a, b));
 
     public static Parser<IExpression> RightSideDivision(IExpression leftSide) =>
-        RightSideFactorOperator(leftSide, '/', (IExpression a, IExpression b) => new DivisionExpression(a, b));
+        RightSideFactorOperator(leftSide, "/", (IExpression a, IExpression b) => new DivisionExpression(a, b));
 
     // AddSubExpr: MulDivExpr ([+|-] MulDivExpr)*
     // MulDivExpr: FactorExpr ([*|/] FactorExpr)*
     // FactorExpr: (AddSubExpr) | Value
     public static Parser<IExpression> MulDivExpression =>
-        from leading in Parse.WhiteSpace.Many()
-        from leftSide in FactorExpression
-        from remainingExpr in Parse.Optional(RightSideMultiplication(leftSide).Or<IExpression>(RightSideDivision(leftSide)))
+        from leftSide in Parse.WhiteSpace.Many().Then((_) => FactorExpression)
+        from remainingExpr in Parse.Optional(RightSideMultiplication(leftSide).Or(RightSideDivision(leftSide)))
         select remainingExpr.GetOrElse(leftSide);
 
     public static Parser<IExpression> FactorExpression =>

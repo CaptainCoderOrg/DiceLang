@@ -3,25 +3,16 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
-    public static Parser<IExpression> ConditionalExpr 
-    {
-        get
-        {
-            return WithParenthesis(ConditionalExprInner).Or(ConditionalExprInner);
-        }
-    }
+    public static Parser<IExpression> ConditionalExpr => WithParenthesis(ConditionalExprInner).Or(ConditionalExprInner);
         
     private static Parser<IExpression> ConditionalExprInner =>
         GreaterThanExpression.Or(LessThanExpression).Or(EqualityExpression);
     private static Parser<IExpression> ConditionalExprHelper(string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return
-        from leading in Parse.WhiteSpace.Many()
-        from leftExpr in ArithmeticExpression
-        from after in Parse.WhiteSpace.Many()
-        from gtSymbol in Parse.String(symbol)
-        from after_ in Parse.WhiteSpace.Many()
-        from rightExpr in ArithmeticExpression
+        from leftExpr in ArithmeticExpression.Token()
+        from _ in Parse.String(symbol).Token()
+        from rightExpr in ArithmeticExpression.Token()
         select constructor(leftExpr, rightExpr);
     }
     public static Parser<IExpression> GreaterThanExpression =>
