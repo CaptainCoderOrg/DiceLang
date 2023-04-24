@@ -37,7 +37,7 @@ public class ConditionalParsersTest
         IntValue rightVal = new (right);
         GreaterThanExpression gtExpr = new (leftVal, rightVal);
 
-        IResult<IExpression> resultExpr = Parsers.ConditionalExpr.TryParse($"{left} > {right}");
+        IResult<IExpression> resultExpr = Parsers.DiceLangExpression.TryParse($"{left} > {right}");
         Assert.True(resultExpr.WasSuccessful);
         Assert.Equal(gtExpr, resultExpr.Value);
     }
