@@ -11,7 +11,7 @@ while (trueWuWu)
 {
     DisplayPrompt();
     string input = Console.ReadLine()!;
-    IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse(input);
+    IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(input);
     if (result.WasSuccessful)
     {
         IValue value = result.Value.Evaluate();
@@ -27,7 +27,7 @@ while (trueWuWu)
 void DisplayPrompt()
 {
     Console.ForegroundColor = ConsoleColor.DarkYellow;
-    Console.Write("DiceLang");
+    Console.Write("DiceLang"); // DiceML
     Console.ForegroundColor = ConsoleColor.DarkRed;
     Console.Write("++");
     Console.ResetColor();

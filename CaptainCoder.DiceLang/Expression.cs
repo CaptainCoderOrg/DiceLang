@@ -1,14 +1,10 @@
 ﻿using CaptainCoder.Core;
-using Sprache;
 namespace CaptainCoder.DiceLang;
-public class Class1
-{
-
-}
 
 public interface IValue
 {
     public int ToInt();
+    public bool ToBool();
     public string PrettyPrint();
 }
 
@@ -20,9 +16,17 @@ public interface IExpression
 public record IntValue(int Value) : IExpression, IValue
 {
     public IValue Evaluate() => this;
-
     public int ToInt() => Value;
     public string PrettyPrint() => Value.ToString();
+    public bool ToBool() => throw new NotSupportedException();
+}
+
+public record BoolValue(bool Value) : IExpression, IValue
+{
+    public IValue Evaluate() => this;
+    public string PrettyPrint() => Value.ToString();
+    public int ToInt() => throw new NotSupportedException();
+    public bool ToBool() => Value;
 }
 
 public record DiceGroupExpression(int DiceCount, int SideCount, IRandom RandomSource) : IExpression
