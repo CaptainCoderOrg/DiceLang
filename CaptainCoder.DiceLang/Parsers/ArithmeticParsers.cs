@@ -26,7 +26,7 @@ public static partial class Parsers
     private static Parser<IExpression> RightSideFactorOperator(IExpression leftSide, string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return
-        from factor in Tokenize(symbol, FactorExpression)
+        from factor in Tokenize(symbol, ArithmeticFactorExpression)
         from optionalMany in Parse.Optional(RightSideMultiplication(constructor(leftSide, factor)).Or(RightSideDivision(constructor(leftSide, factor)))) //
         select optionalMany.GetOrElse(constructor(leftSide, factor));
     }
@@ -41,11 +41,11 @@ public static partial class Parsers
     // MulDivExpr: FactorExpr ([*|/] FactorExpr)*
     // FactorExpr: (AddSubExpr) | Value
     public static Parser<IExpression> MulDivExpression =>
-        from leftSide in Parse.WhiteSpace.Many().Then((_) => FactorExpression)
+        from leftSide in Parse.WhiteSpace.Many().Then((_) => ArithmeticFactorExpression)
         from remainingExpr in Parse.Optional(RightSideMultiplication(leftSide).Or(RightSideDivision(leftSide)))
         select remainingExpr.GetOrElse(leftSide);
 
-    public static Parser<IExpression> FactorExpression =>
+    public static Parser<IExpression> ArithmeticFactorExpression =>
         WithParenthesis(AddSubExpression).Or(NumericExpression);
 
     public static Parser<IExpression> ArithmeticExpression => AddSubExpression;

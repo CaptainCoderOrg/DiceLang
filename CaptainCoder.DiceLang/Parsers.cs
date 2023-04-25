@@ -6,7 +6,7 @@ public static partial class Parsers
 
     private static Parser<IExpression> _diceLangExpression =>
         from leading in Parse.WhiteSpace.Many()
-        from expression in BoolValue.Or(IfElseExpr).Or(ConditionalExpr).Or(ArithmeticExpression)
+        from expression in BooleanExpression.Or(IfElseExpr).Or(ArithmeticExpression).Or(NotExpr)
         from training in Parse.WhiteSpace.Many()
         select expression;
 
