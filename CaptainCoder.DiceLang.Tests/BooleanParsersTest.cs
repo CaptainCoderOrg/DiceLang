@@ -35,4 +35,22 @@ public class BooleanParsersTest
         );
         Assert.Equal(expected, result.Value);
     }
+
+    [Fact]
+    public void TestParenthesisNot()
+    {
+        IResult<IExpression> result = Parsers.BooleanExpression.TryParse("!(true && false)");
+        Assert.True(result.WasSuccessful);
+        IExpression expected = new NotExpression(new AndExpression(new BoolValue(true), new BoolValue(false)));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void TestMultiNot()
+    {
+        IResult<IExpression> result = Parsers.BooleanExpression.TryParse("!!!(true && false)");
+        Assert.True(result.WasSuccessful);
+        IExpression expected = new NotExpression(new NotExpression(new NotExpression(new AndExpression(new BoolValue(true), new BoolValue(false)))));
+        Assert.Equal(expected, result.Value);
+    }
 }
