@@ -9,8 +9,7 @@ public static partial class Parsers
     public static Parser<IExpression> RelationalExpr =>
         GreaterThanExpression
         .Or(LessThanExpression)
-        .Or(EqualityExpression)
-        .Or(IdentifierExpr);
+        .Or(EqualityExpression);
     private static Parser<IExpression> ConditionalExprHelper(string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return

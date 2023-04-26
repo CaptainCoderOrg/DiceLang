@@ -13,16 +13,18 @@ OrExpr ::= AndExpr (|| AndExpr)*
 AndExpr ::= BoolFactorExpr (&& BoolFactorExpr)*
 BoolFactorExpr ::= (OrExpr) | RelationalExpr | NotExpr | BoolValue
 NotExpr ::= ! OrExpr
-BoolValue ::= Id | Bool
+BoolValue ::= BoolId | Bool
 RelationalExpr ::= ArithmeticExpression [<|>|==] ArithmeticExpression
 ConditionalExpr ::= OrExpr
+
+BoolId ::= Id [Not(Operator)]
 
 ---
 
 IfElseExpr ::= if ConditionalExpr then Expr else Expr
 LetExpr ::= let Id = Expr in Expr
 
-Expr ::= ^[ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr]$
+Expr ::= ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr
 
 
 

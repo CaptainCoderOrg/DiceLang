@@ -60,7 +60,15 @@ public static partial class Parsers
         select new IdentifierValue(string.Join("", id));
 
     public static Parser<IExpression> BoolValueExpression =>
-    IdentifierExpr.Or(BoolValue);
+    BoolIdentifier.Or(BoolValue);
+
+    public static Parser<object> Operator =>
+        Parse.RegexMatch("[+|-|*|/|<|>|==]").Token();
+
+    public static Parser<IExpression> BoolIdentifier =>
+        from id in IdentifierExpr.Token()
+        from _ in Operator.Not()
+        select id;
 
     public static Parser<IExpression> NumericValueExpression =>
     (DiceGroupExpression as Parser<IExpression>)

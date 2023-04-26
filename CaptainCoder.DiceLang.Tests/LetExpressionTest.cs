@@ -110,4 +110,31 @@ public class LetExpressionTest
 
         Assert.Equal(expected, result.Value);
     }
+
+    [Fact]
+    public void ParseBoolValueExprFailWithPlus()
+    {
+        IResult<IExpression> result = Parsers.BoolValueExpression.TryParse("x + 2");
+        Assert.False(result.WasSuccessful);
+    }
+
+    [Fact]
+    public void ParseBoolFactorExprFailWithPlus()
+    {
+        IResult<IExpression> result = Parsers.BooleanFactorExpression.TryParse("x + 2");
+        Assert.False(result.WasSuccessful);
+    }
+
+    [Fact]
+    public void ParseIdentifierInArithmeticExprInLetExpr()
+    {
+        IResult<IExpression> result = Parsers.LetExpr.TryParse("let y = x + 2 in y");
+        Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
+        IExpression expected = 
+            new LetExpression(
+                "y", new AdditionExpression(new IdentifierValue("x"), new IntValue(2)),
+                new IdentifierValue("y")                
+            );
+        Assert.Equal(expected, result.Value);
+    }
 }
