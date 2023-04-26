@@ -3,10 +3,14 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
-    public static Parser<IExpression> ConditionalExpr => WithParenthesis(ConditionalExprInner).Or(ConditionalExprInner);
-        
+    public static Parser<IExpression> ConditionalExpr => 
+        WithParenthesis(ConditionalExprInner)
+        .Or(ConditionalExprInner);
     private static Parser<IExpression> ConditionalExprInner =>
-        GreaterThanExpression.Or(LessThanExpression).Or(EqualityExpression);
+        GreaterThanExpression
+        .Or(LessThanExpression)
+        .Or(EqualityExpression)
+        .Or(IdentifierExpr);
     private static Parser<IExpression> ConditionalExprHelper(string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return

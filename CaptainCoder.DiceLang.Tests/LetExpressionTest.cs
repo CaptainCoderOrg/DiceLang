@@ -61,4 +61,53 @@ public class LetExpressionTest
         IValue expected = new BoolValue(true);
         Assert.Equal(expected, result);
     }
+
+    [Fact]
+    public void SimpleParseTest()
+    {
+        // let x = 5 in x
+        IResult<IExpression> result = Parsers.LetExpr.TryParse("let x = 5 in x");
+        Assert.True(result.WasSuccessful, $"Failed with '{result.Message}'");
+        IExpression expected = new LetExpression("x", new IntValue(5), new IdentifierValue("x"));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void ParseIdentifierInEqExpr()
+    {
+        IResult<IExpression> result = Parsers.ConditionalExpr.TryParse("x == y");
+        Assert.True(result.WasSuccessful);
+        IExpression expected = new EqualityExpression(new IdentifierValue("x"), new IdentifierValue("y"));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void ParseIdentifierArithmeticExpr()
+    {
+        IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("x + y");
+        Assert.True(result.WasSuccessful);
+        IExpression expected = new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void NestedLetParser()
+    {
+        IResult<IExpression> result = Parsers.LetExpr.TryParse(@"
+        let x = 5 in
+        let y = 2 in 
+        x + y == y + x
+        ");
+        Assert.True(result.WasSuccessful);
+        // let x = 5 in 
+        // let y = 2 in x + y == y + x
+        IExpression expected = new LetExpression(
+            "x", new IntValue(5), 
+            new LetExpression("y", new IntValue(2),
+            new EqualityExpression(
+                new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y")),
+                new AdditionExpression(new IdentifierValue("y"), new IdentifierValue("x")))));
+
+        Assert.Equal(expected, result.Value);
+    }
 }

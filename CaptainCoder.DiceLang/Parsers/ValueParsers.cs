@@ -27,8 +27,41 @@ public static partial class Parsers
         return DiceLang.DiceGroupExpression.WithDefaultSource(diceCount, sideCount);
     }
 
+    private static readonly string[] ReservedKeywords =
+    {
+        "let", "if", "then", "else", "fun"
+    };
+
+    public static Parser<object> NotKeywords()
+    {
+
+        Parser<object> parser = null;
+        foreach (string keyword in ReservedKeywords)
+        {
+            if (parser == null)
+            {
+                parser = Parse.String(keyword).Token();
+            }
+            else
+            {
+                parser = parser.Or(Parse.String(keyword).Token());
+            }            
+        }
+        return parser.Not();
+    }
+        
+            // ReservedKeywords.Aggregate(Parse.String("foo").Token(), (string left, string right) => Parse.String(left).Token());
+    
+        
+
+    public static Parser<IdentifierValue> IdentifierExpr =>
+        from _ in NotKeywords()
+        from id in Parse.Letter.AtLeastOnce().Token()
+        select new IdentifierValue(string.Join("", id));
+
     public static Parser<IExpression> NumericExpression =>
     (DiceGroupExpression as Parser<IExpression>)
     .Or(IntValue)
-;
+    .Or(IdentifierExpr);
+
 }
