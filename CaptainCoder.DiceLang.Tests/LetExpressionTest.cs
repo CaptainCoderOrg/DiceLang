@@ -75,7 +75,7 @@ public class LetExpressionTest
     [Fact]
     public void ParseIdentifierInEqExpr()
     {
-        IResult<IExpression> result = Parsers.ConditionalExpr.TryParse("x == y");
+        IResult<IExpression> result = Parsers.RelationalExpr.TryParse("x == y");
         Assert.True(result.WasSuccessful);
         IExpression expected = new EqualityExpression(new IdentifierValue("x"), new IdentifierValue("y"));
         Assert.Equal(expected, result.Value);

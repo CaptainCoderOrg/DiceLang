@@ -1,0 +1,29 @@
+
+
+AddSubExpr ::= MulDivExpr ([+|-] MulDivExpr)*
+MulDivExpr ::= ArithFactorExpr ([*|/] ArithFactorExpr)*
+ArithFactorExpr ::= (AddSubExpr) | NumericValue
+NumericValue ::= Id | DiceGroup | Int
+
+ArithmeticExpression ::= AddSubExpr
+
+---
+
+OrExpr ::= AndExpr (|| AndExpr)*
+AndExpr ::= BoolFactorExpr (&& BoolFactorExpr)*
+BoolFactorExpr ::= (OrExpr) | RelationalExpr | NotExpr | BoolValue
+NotExpr ::= ! OrExpr
+BoolValue ::= Id | Bool
+RelationalExpr ::= ArithmeticExpression [<|>|==] ArithmeticExpression
+ConditionalExpr ::= OrExpr
+
+---
+
+IfElseExpr ::= if ConditionalExpr then Expr else Expr
+LetExpr ::= let Id = Expr in Expr
+
+Expr ::= ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr
+
+
+
+// Value ::= Id | Bool | Int | DiceGroup

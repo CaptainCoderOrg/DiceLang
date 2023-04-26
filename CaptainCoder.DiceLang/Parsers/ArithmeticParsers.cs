@@ -47,7 +47,7 @@ public static partial class Parsers
 
     public static Parser<IExpression> ArithmeticFactorExpression =>
         WithParenthesis(AddSubExpression)
-        .Or(NumericExpression);
+        .Or(NumericValueExpression);
 
     public static Parser<IExpression> ArithmeticExpression => AddSubExpression;
 }

@@ -15,6 +15,12 @@ public static partial class Parsers
         from leftSide in AndExpression.Token()
         from remainingExpr in RightSideOrExpression(leftSide).Optional()
         select remainingExpr.GetOrElse(leftSide);
+    
+    private static Parser<IExpression> RightSideOrExpression(IExpression leftSide) =>
+        from factor in Tokenize("||", AndExpression)
+        from optionalMany in Parse.Optional(RightSideOrExpression(factor))
+        select new OrExpression(leftSide, optionalMany.GetOrElse(factor));
+        
     public static Parser<IExpression> AndExpression => 
         from leftSide in Parse.WhiteSpace.Many().Then((_) => BooleanFactorExpression)
         from remainingExpr in RightSideAndExpr(leftSide).Optional()
@@ -28,13 +34,12 @@ public static partial class Parsers
         select new AndExpression(leftSide, optionalMany.GetOrElse(factor));
     }
 
-    private static Parser<IExpression> RightSideOrExpression(IExpression leftSide) =>
-        from factor in Tokenize("||", AndExpression)
-        from optionalMany in Parse.Optional(RightSideOrExpression(factor))
-        select new OrExpression(leftSide, optionalMany.GetOrElse(factor));
 
     public static Parser<IExpression> BooleanFactorExpression =>
-        WithParenthesis(AndExpression).Or(BoolValue).Or(ConditionalExpr).Or(NotExpr);
+        WithParenthesis(OrExpression)
+        .Or(RelationalExpr)
+        .Or(NotExpr)
+        .Or(BoolValueExpression);
 
-    public static Parser<IExpression> BooleanExpression => OrExpression; 
+    public static Parser<IExpression> ConditionalExpression => OrExpression; 
 }

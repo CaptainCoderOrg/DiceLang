@@ -3,7 +3,7 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
-    public static Parser<BoolValue> BoolValue =>
+    public static Parser<IExpression> BoolValue =>
         from value in Parse.String("true").Or(Parse.String("false")).Token()
         select new BoolValue(string.Join("", value) == "true");
 
@@ -29,7 +29,7 @@ public static partial class Parsers
 
     private static readonly string[] ReservedKeywords =
     {
-        "let", "if", "then", "else", "fun"
+        "let", "if", "then", "else", "fun", "true", "false"
     };
 
     public static Parser<object> NotKeywords()
@@ -59,7 +59,10 @@ public static partial class Parsers
         from id in Parse.Letter.AtLeastOnce().Token()
         select new IdentifierValue(string.Join("", id));
 
-    public static Parser<IExpression> NumericExpression =>
+    public static Parser<IExpression> BoolValueExpression =>
+    IdentifierExpr.Or(BoolValue);
+
+    public static Parser<IExpression> NumericValueExpression =>
     (DiceGroupExpression as Parser<IExpression>)
     .Or(IntValue)
     .Or(IdentifierExpr);
