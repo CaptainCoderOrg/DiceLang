@@ -1,5 +1,13 @@
-let f = fun(x) => 3 + (5 - 7) + 3d6
-in explain(x + 7)
+let player1 = 3d6 in 
+let player2 = 3d6 in
+let currentPlayer = if player1 > player2 then 1 else 2 in
+currentPlayer ;;
+
+let x = 5 in
+    let f = fun(x) => x + 7 in
+    f(3d6 + x) 
+         
+    
 
 // if (1d100 < 10)
 // {

@@ -5,4 +5,6 @@ public record BoolValue(bool Value) : IExpression, IValue
     public string PrettyPrint() => Value.ToString();
     public int ToInt() => throw new NotSupportedException();
     public bool ToBool() => Value;
+    public IExpression Substitute(string label, IExpression toSub) => this;
+
 }

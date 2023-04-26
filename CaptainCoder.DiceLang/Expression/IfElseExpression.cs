@@ -9,4 +9,13 @@ public record IfElseExpression(IExpression Condition, IExpression TrueExpr, IExp
         IValue conditionResult = Condition.Evaluate();
         return conditionResult.ToBool() ? TrueExpr.Evaluate() : FalseExpr.Evaluate();
     }
+
+    public IExpression Substitute(string label, IExpression toSub)
+    {
+        return new IfElseExpression(
+            Condition.Substitute(label, toSub),
+            TrueExpr.Substitute(label, toSub),
+            FalseExpr.Substitute(label, toSub)
+        );
+    }
 }

@@ -13,4 +13,6 @@ public record DiceGroupExpression(int DiceCount, int SideCount, IRandom RandomSo
         }
         return new IntValue(sum);
     }
+
+    public IExpression Substitute(string label, IExpression toSub) => this;
 }
