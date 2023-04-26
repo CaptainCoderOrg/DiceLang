@@ -9,8 +9,7 @@ public record LetExpression(string Label, IExpression ValueExpr, IExpression Bod
     public IValue Evaluate()
     {
         IValue value = ValueExpr.Evaluate();
-        // return BodyExpr.Substitute(Label, value);
-        throw new NotImplementedException();
+        return BodyExpr.Substitute(Label, value).Evaluate();
     }
 
    public IExpression Substitute(string label, IExpression toSub)
