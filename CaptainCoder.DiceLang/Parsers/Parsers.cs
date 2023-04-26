@@ -5,14 +5,10 @@ public static partial class Parsers
 {
 
     private static Parser<IExpression> DiceLangExpressionInner =>
-        from leading in Parse.WhiteSpace.Many()
-        from expression in 
             ConditionalExpression
             .Or(LetExpr)
             .Or(IfElseExpr)
-            .Or(ArithmeticExpression)
-        from training in Parse.WhiteSpace.Many()
-        select expression;
+            .Or(ArithmeticExpression).Token();
 
     public static Parser<IExpression> DiceLangExpression => DiceLangExpressionInner.End();
 }

@@ -22,7 +22,7 @@ ConditionalExpr ::= OrExpr
 IfElseExpr ::= if ConditionalExpr then Expr else Expr
 LetExpr ::= let Id = Expr in Expr
 
-Expr ::= ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr
+Expr ::= ^[ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr]$
 
 
 
