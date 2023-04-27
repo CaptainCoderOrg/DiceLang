@@ -1,5 +1,6 @@
-let x = 3d6 in
-let y = 3d6 in
-if x > y then 1 
+let x = 3d6 + 7 in
+let y = 3d6 + x in
+let addOne = fun(x) => x + 1 in
+if x > y then x 
 else if x < y then 2
-else 3
+else addOne(7)

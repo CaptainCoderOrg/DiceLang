@@ -1,5 +1,3 @@
-
-
 AddSubExpr ::= MulDivExpr ([+|-] MulDivExpr)*
 MulDivExpr ::= ArithFactorExpr ([*|/] ArithFactorExpr)*
 ArithFactorExpr ::= (AddSubExpr) | NumericValue
@@ -24,7 +22,12 @@ BoolId ::= Id [Not(Operator)]
 IfElseExpr ::= if ConditionalExpr then Expr else Expr
 LetExpr ::= let Id = Expr in Expr
 
-Expr ::= ConditionalExpr | LetExpr | IfElseExpr | ArithmeticExpr
+FuncDefExpr ::= fun(Id) => Expr
+FuncApplyExpr ::= FuncFactor (Expr) [(Expr)]*
+
+FuncFactor ::= (FuncDefExpr) | Id
+
+Expr ::= ConditionalExpr | LetExpr | IfElseExpr | FuncDefExpr | FuncApplyExpr | ArithmeticExpr
 
 
 

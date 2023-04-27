@@ -50,9 +50,11 @@ public static partial class Parsers
         return parser.Not();
     }
         
-            // ReservedKeywords.Aggregate(Parse.String("foo").Token(), (string left, string right) => Parse.String(left).Token());
+    // ReservedKeywords.Aggregate(Parse.String("foo").Token(), (string left, string right) => Parse.String(left).Token());
     
-        
+    public static Parser<string> IdentifierString =>
+        from id in Parse.Letter.AtLeastOnce().Token()
+        select string.Join("", id);
 
     public static Parser<IdentifierValue> IdentifierExpr =>
         from _ in NotKeywords()

@@ -11,7 +11,5 @@ public static partial class Parsers
         from bodyExpr in Tokenize("in", DiceLangExpressionInner)
         select new LetExpression(identifier, valueExpr, bodyExpr);
 
-    public static Parser<string> IdentifierString =>
-        from id in Parse.Letter.AtLeastOnce().Token()
-        select string.Join("", id); 
+    
 }
