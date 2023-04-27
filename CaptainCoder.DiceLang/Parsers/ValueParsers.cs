@@ -64,12 +64,31 @@ public static partial class Parsers
     public static Parser<IExpression> BoolValueExpression =>
     BoolIdentifier.Or(BoolValue);
 
-    public static Parser<object> Operator =>
-        Parse.RegexMatch("[+|-|*|/|<|>|==]").Token();
+    public static readonly string[] Operators = new string[]{"+", "-", "*", "/", "<", ">", "=="};
+    public static Parser<object> NotOperator()
+    {
+
+        Parser<object> parser = null;
+        foreach (string @operator in Operators)
+        {
+            if (parser == null)
+            {
+                parser = Parse.String(@operator).Token();
+            }
+            else
+            {
+                parser = parser.Or(Parse.String(@operator).Token());
+            }            
+        }
+        return parser.Not();
+    }
+    
+        
+        // ("[+|-|*|/|<|>|==]").Token();
 
     public static Parser<IExpression> BoolIdentifier =>
         from id in IdentifierExpr.Token()
-        from _ in Operator.Not()
+        from _ in NotOperator()
         select id;
 
     public static Parser<IExpression> NumericValueExpression =>

@@ -27,7 +27,7 @@ FuncApplyExpr ::= FuncFactor (Expr) [(Expr)]*
 
 FuncFactor ::= (FuncDefExpr) | Id
 
-Expr ::= ConditionalExpr | LetExpr | IfElseExpr | FuncDefExpr | FuncApplyExpr | ArithmeticExpr
+Expr ::= FuncApplyExpr | ConditionalExpr | LetExpr | IfElseExpr | FuncDefExpr  | ArithmeticExpr
 
 
 

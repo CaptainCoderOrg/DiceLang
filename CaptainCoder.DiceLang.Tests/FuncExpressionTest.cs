@@ -32,7 +32,7 @@ public class FuncExpressionTest
         // let x = 5 in
         // let f = fun(x) => x + 1 in
         // f(1)
-        IExpression expression = 
+        IExpression expression =
         new LetExpression("x", new IntValue(5),
             new LetExpression("f", new FuncValue("x", new AdditionExpression(new IdentifierValue("x"), new IntValue(1))),
                     new ApplyFuncExpression(new IdentifierValue("f"), new IntValue(1))));
@@ -51,7 +51,7 @@ public class FuncExpressionTest
         in f"
         );
         Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
-        IExpression expected = 
+        IExpression expected =
             new LetExpression("x", new IntValue(5),
                 new LetExpression("f", new FuncValue("x", new AdditionExpression(new IdentifierValue("x"), new IntValue(1))),
                         new IdentifierValue("f")));
@@ -83,11 +83,11 @@ public class FuncExpressionTest
     {
         IResult<IExpression> result = Parsers.ApplyFuncExpr.TryParse("f(1)(2)");
         Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}");
-        IExpression expected = 
+        IExpression expected =
             new ApplyFuncExpression(
                 new ApplyFuncExpression(
-                    new IdentifierValue("f"), 
-                    new IntValue(1)), 
+                    new IdentifierValue("f"),
+                    new IntValue(1)),
                 new IntValue(2));
         Assert.Equal(expected, result.Value);
     }
@@ -107,11 +107,82 @@ public class FuncExpressionTest
         else f (7)
         ");
         Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
-        // IExpression expected = 
-        //     new LetExpression("x", new IntValue(5),
-        //         new LetExpression("f", new FuncValue("x", new AdditionExpression(new IdentifierValue("x"), new IntValue(1))),
-        //                 new IdentifierValue("f")));
-        // Assert.Equal(expected, result.Value);
     }
-    
+
+    // [Fact]
+    // public void OperatorParserTest()
+    // {
+    //     IResult<IEnumerable<char>> result = Parsers.Not.TryParse(" - ");
+    // }
+
+    [Fact]
+    public void TestParseArithmeticNotAllowed()
+    {
+        IResult<IExpression> result = Parsers.ApplyFuncExpr.TryParse("x - 1");
+        Assert.False(result.WasSuccessful);
+        /*
+                    ApplyFuncExpr
+            .Or(ConditionalExpression)
+            .Or(LetExpr)
+            .Or(IfElseExpr)
+            .Or(ArithmeticExpression)
+            .Or(FuncExpr).Token();
+
+            BoolIdentifier
+            */
+        result = Parsers.BoolIdentifier.TryParse("x - 1");
+        Assert.False(result.WasSuccessful);
+
+        result = Parsers.ConditionalExpression.TryParse("x - 1");
+        Assert.False(result.WasSuccessful);
+    }
+
+    [Fact]
+    public void TestParseXMinus1()
+    {
+        IResult<IExpression> result = Parsers.DiceLangExpressionInner.TryParse(@"
+        x - 1
+        ");
+        Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
+        IExpression expected =
+                new SubtractionExpression(new IdentifierValue("x"), new IntValue(1));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void TestParseApplyFuncWithXMinus1()
+    {
+        IResult<IExpression> result = Parsers.ApplyFuncExpr.TryParse(@"
+        f (x - 1)
+        ");
+        Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
+        IExpression expected =
+            new ApplyFuncExpression(
+                new IdentifierValue("f"),
+                new SubtractionExpression(new IdentifierValue("x"), new IntValue(1))
+            );
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void TestParseFunInElse()
+    {
+        IResult<IExpression> result = Parsers.IfElseExpr.TryParse(@"
+        if x == 0 then 1 else f (x - 1)
+        ");
+        Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
+        IExpression expected =
+        new IfElseExpression(
+            new EqualityExpression(new IdentifierValue("x"), new IntValue(0)),
+            new IntValue(1),
+            new ApplyFuncExpression(
+                new IdentifierValue("f"),
+                new SubtractionExpression(new IdentifierValue("x"), new IntValue(1))
+            )
+        );
+        Assert.Equal(expected, result.Value);
+    }
+
+
+
 }

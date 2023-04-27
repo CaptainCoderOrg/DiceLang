@@ -30,7 +30,7 @@ public static partial class Parsers
         return funcExpr;
     }
 
-    private static Parser<IExpression> ArgumentExpr => WithParenthesis(DiceLangExpressionInner).Token();
+    private static Parser<IExpression> ArgumentExpr => WithParenthesis(DiceLangExpressionInner);
 
     public static Parser<IExpression> ApplyFuncFactor => 
         WithParenthesis(FuncExpr.Token()).Or(IdentifierExpr);
