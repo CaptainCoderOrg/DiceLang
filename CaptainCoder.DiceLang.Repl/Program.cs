@@ -1,20 +1,14 @@
 ﻿using CaptainCoder.DiceLang;
 using Sprache;
 
-List<string> Commands = new ();
-
-// See https://aka.ms/new-console-template for more information
-Console.Clear();
-Console.WriteLine("DiceLang++ v0.0.0... Nothing works, be careful.");
-
-// What does REPL stand for?
-// Read Evaluate Print Loop
-bool trueWuWu = true;
-while (trueWuWu)
+if (args.Length == 0)
 {
-    DisplayPrompt();
-    string input = Console.ReadLine()!;
-    IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(input);
+    REPL();
+}
+else if (args.Length == 1)
+{
+    string source = File.ReadAllText(args[0]);
+    IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(source);
     if (result.WasSuccessful)
     {
         IValue value = result.Value.Evaluate();
@@ -24,6 +18,40 @@ while (trueWuWu)
     {
         Console.Error.WriteLine("Failed to parse:");
         Console.Error.WriteLine(result.Message);
+    }
+}
+else
+{
+    Console.Error.WriteLine($"Invalid arguments {string.Join(" ", args)}");
+}
+
+
+void REPL()
+{
+    List<string> Commands = new();
+
+    // See https://aka.ms/new-console-template for more information
+    Console.Clear();
+    Console.WriteLine("DiceLang++ v0.0.0... Nothing works, be careful.");
+
+    // What does REPL stand for?
+    // Read Evaluate Print Loop
+    bool trueWuWu = true;
+    while (trueWuWu)
+    {
+        DisplayPrompt();
+        string input = Console.ReadLine()!;
+        IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(input);
+        if (result.WasSuccessful)
+        {
+            IValue value = result.Value.Evaluate();
+            Console.WriteLine(value.PrettyPrint());
+        }
+        else
+        {
+            Console.Error.WriteLine("Failed to parse:");
+            Console.Error.WriteLine(result.Message);
+        }
     }
 }
 

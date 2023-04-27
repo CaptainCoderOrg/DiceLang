@@ -1,0 +1,5 @@
+let x = 3d6 in
+let y = 3d6 in
+if x > y then 1 
+else if x < y then 2
+else 3
