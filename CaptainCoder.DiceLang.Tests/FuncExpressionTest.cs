@@ -183,6 +183,40 @@ public class FuncExpressionTest
         Assert.Equal(expected, result.Value);
     }
 
+    [Fact]
+    public void TestParseNestedFunctionApplication()
+    {
+        IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(@"
+        let f = fun(x) => fun(y) => x + y
+        in f (1)(2)
+        ");
+        Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
+        IExpression functions = 
+            new FuncValue("x", 
+                new FuncValue("y", new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"))));
+        IExpression expected =
+        new LetExpression("f",
+            functions,
+            new ApplyFuncExpression(new ApplyFuncExpression(new IdentifierValue("f"), new IntValue(1)), new IntValue(2))
+        );
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void TestExecuteNestedFunctionApplication()
+    {
+        IExpression functions = 
+            new FuncValue("x", 
+                new FuncValue("y", new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"))));
+        IExpression application =
+            new ApplyFuncExpression(new ApplyFuncExpression(functions, new IntValue(1)), new IntValue(2));
+        Assert.Equal(new IntValue(3), application.Evaluate(Environment.Empty));
+
+    }
+
+    /*
+    let f = fun(x) => fun(y) => x + y
+in f (1)(2)*/
 
 
 }
