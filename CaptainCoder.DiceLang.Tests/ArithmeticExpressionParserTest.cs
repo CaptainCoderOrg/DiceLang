@@ -15,7 +15,7 @@ public class ArithmeticExpressionParserTest
         // 13
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5 * 2 + 7 - 12 / 3");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (13);
         Assert.Equal(expected, evalResult);
     }
@@ -25,7 +25,7 @@ public class ArithmeticExpressionParserTest
     {
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5 + 7 - 3");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (9);
         Assert.Equal(expected, evalResult);
     }
@@ -35,7 +35,7 @@ public class ArithmeticExpressionParserTest
     {
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5 * 3 * 2");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (30);
         Assert.Equal(expected, evalResult);
     }
@@ -45,7 +45,7 @@ public class ArithmeticExpressionParserTest
     {
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("15 / 5");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (3);
         Assert.Equal(expected, evalResult);
     }
@@ -56,7 +56,7 @@ public class ArithmeticExpressionParserTest
         // 2 * 3 * 5 * 7
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("210 / 7 / 5 / 2");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (3);
         Assert.Equal(expected, evalResult);
     }

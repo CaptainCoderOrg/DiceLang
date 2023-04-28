@@ -17,7 +17,7 @@ public class ConditionalParsersTest
         IntValue rightVal = new (right);
         GreaterThanExpression gtExpr = new (leftVal, rightVal);
         bool expected = left > right;
-        Assert.Equal(expected, gtExpr.Evaluate().ToBool());
+        Assert.Equal(expected, gtExpr.Evaluate(Environment.Empty).ToBool());
     }
 
     

@@ -6,37 +6,18 @@ namespace CaptainCoder.DiceLang;
 // let LABEL = ValueExpr in BodyExpr
 public record LetExpression(string Label, IExpression ValueExpr, IExpression BodyExpr) : IExpression
 {
-    public IValue Evaluate()
+    public IValue Evaluate(Environment env)
     {
-        IValue value = ValueExpr.Evaluate();
-        return BodyExpr.Substitute(Label, value).Evaluate();
+        IValue value = ValueExpr.Evaluate(env);
+        Environment extended = env.Extend(Label, value);
+        return BodyExpr.Evaluate(extended);
     }
 
-   public IExpression Substitute(string label, IExpression toSub)
-   {
-        if (label == Label)
-        {
-            throw new Exception($"Label {label} is already defined.");
-        }
-        return new LetExpression(Label, ValueExpr.Substitute(label, toSub), BodyExpr.Substitute(label, toSub));
-   }
 }
 
 public record IdentifierValue(string Label) : IExpression, IValue
 {
-    public IValue Evaluate()
-    {
-        throw new Exception($"Encountered identifier '{Label}' without a let binding.");
-    }
-
-    public IExpression Substitute(string label, IExpression toSub)
-    {
-        if (label == Label)
-        {
-            return toSub;
-        }
-        return this;
-    }
+    public IValue Evaluate(Environment env) => env.Lookup(Label);
 
     public int ToInt() => throw new NotSupportedException();
     public bool ToBool() => throw new NotSupportedException();

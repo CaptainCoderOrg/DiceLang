@@ -11,7 +11,7 @@ public class MulDivExpressionParserTest
     {
         IResult<IExpression> result = Parsers.MulDivExpression.TryParse("6 * 3 * 2");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (36);
         Assert.Equal(expected, evalResult);
     }

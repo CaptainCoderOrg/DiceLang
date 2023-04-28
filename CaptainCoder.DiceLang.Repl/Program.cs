@@ -11,7 +11,8 @@ else if (args.Length == 1)
     IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(source);
     if (result.WasSuccessful)
     {
-        IValue value = result.Value.Evaluate();
+        CaptainCoder.DiceLang.Environment env = new ();
+        IValue value = result.Value.Evaluate(env);
         Console.WriteLine(value.PrettyPrint());
     }
     else
@@ -44,7 +45,8 @@ void REPL()
         IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(input);
         if (result.WasSuccessful)
         {
-            IValue value = result.Value.Evaluate();
+            CaptainCoder.DiceLang.Environment env = new ();
+            IValue value = result.Value.Evaluate(env);
             Console.WriteLine(value.PrettyPrint());
         }
         else

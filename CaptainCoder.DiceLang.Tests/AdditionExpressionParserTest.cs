@@ -14,7 +14,7 @@ public class AdditionExpressionParserTest
         // "5 + 2"
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5 + 2");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (7);
         Assert.Equal(expected, evalResult);
     }
@@ -27,7 +27,7 @@ public class AdditionExpressionParserTest
         // "5 + 2"
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5    +  2  +    9");
         Assert.True(result.WasSuccessful);
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (16);
         Assert.Equal(expected, evalResult);
     }
@@ -41,7 +41,7 @@ public class AdditionExpressionParserTest
         IResult<IExpression> result = Parsers.ArithmeticExpression.TryParse("5    +  2d6");
         Assert.True(result.WasSuccessful);
         moqRandom.SetupSequence((random) => random.Next(0, 6)).Returns(0).Returns(4); // 1 + 5
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (11);
         Assert.Equal(expected, evalResult);
     }
@@ -56,7 +56,7 @@ public class AdditionExpressionParserTest
         Assert.True(result.WasSuccessful);
         moqRandom.SetupSequence((random) => random.Next(0, 4)).Returns(0).Returns(2); // 1 + 3
         moqRandom.SetupSequence((random) => random.Next(0, 3)).Returns(0).Returns(1).Returns(2); // 1 + 2 + 3
-        IValue evalResult = result.Value.Evaluate();
+        IValue evalResult = result.Value.Evaluate(Environment.Empty);
         IntValue expected = new (10);
         Assert.Equal(expected, evalResult);
     }

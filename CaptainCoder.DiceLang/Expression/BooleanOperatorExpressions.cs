@@ -14,6 +14,5 @@ public record OrExpression(IExpression Left, IExpression Right) : BinaryOperator
 
 public record NotExpression(IExpression Expr) : IExpression
 {
-    public IValue Evaluate() => new BoolValue(!Expr.Evaluate().ToBool());
-    public IExpression Substitute(string label, IExpression toSub) => new NotExpression(Expr.Substitute(label, toSub));
+    public IValue Evaluate(Environment env) => new BoolValue(!Expr.Evaluate(env).ToBool());
 }

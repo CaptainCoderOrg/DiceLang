@@ -12,7 +12,7 @@ public class LetExpressionTest
         // let x = 5 in x
         IExpression simpleLet = new LetExpression("x", new IntValue(5), new IdentifierValue("x"));
 
-        IValue result = simpleLet.Evaluate();
+        IValue result = simpleLet.Evaluate(Environment.Empty);
         IValue expected = new IntValue(5);
         Assert.Equal(expected, result);
     }
@@ -25,7 +25,7 @@ public class LetExpressionTest
             "x", new IntValue(5), 
             new AdditionExpression(new IdentifierValue("x"), new IntValue(2)));
 
-        IValue result = simpleLet.Evaluate();
+        IValue result = simpleLet.Evaluate(Environment.Empty);
         IValue expected = new IntValue(7);
         Assert.Equal(expected, result);
     }
@@ -40,7 +40,7 @@ public class LetExpressionTest
             new LetExpression("y", new IntValue(2),
             new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"))));
 
-        IValue result = nestedLet.Evaluate();
+        IValue result = nestedLet.Evaluate(Environment.Empty);
         IValue expected = new IntValue(7);
         Assert.Equal(expected, result);
     }
@@ -57,7 +57,7 @@ public class LetExpressionTest
                 new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y")),
                 new AdditionExpression(new IdentifierValue("y"), new IdentifierValue("x")))));
 
-        IValue result = nestedLet.Evaluate();
+        IValue result = nestedLet.Evaluate(Environment.Empty);
         IValue expected = new BoolValue(true);
         Assert.Equal(expected, result);
     }
