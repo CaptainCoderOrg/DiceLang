@@ -1,2 +1,9 @@
-let f = fun(x) => fun(y) => x + y
-in f (1)(2)
+let max = fun(x) => fun(y) => if x > y then x else y in
+let min = fun(x) => fun(y) => if x < y then x else y in
+let exp = fun(base) => fun(power) => 
+    if power == 1 
+    then 
+       base 
+    else 
+       base * exp(base)(power - 1)
+in exp(3)(4)

@@ -9,6 +9,10 @@ public record LetExpression(string Label, IExpression ValueExpr, IExpression Bod
     public IValue Evaluate(Environment env)
     {
         IValue value = ValueExpr.Evaluate(env);
+        if (value is FuncValue funcValue)
+        {
+            funcValue.Scope = funcValue.Scope.Extend(Label, value);
+        }
         Environment extended = env.Extend(Label, value);
         return BodyExpr.Evaluate(extended);
     }

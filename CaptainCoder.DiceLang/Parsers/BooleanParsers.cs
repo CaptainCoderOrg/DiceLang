@@ -39,6 +39,7 @@ public static partial class Parsers
         WithParenthesis(OrExpression)
         .Or(RelationalExpr)
         .Or(NotExpr)
+        .Or(ApplyFuncExpr)
         .Or(BoolValueExpression);
 
     public static Parser<IExpression> ConditionalExpression => OrExpression; 

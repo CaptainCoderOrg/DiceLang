@@ -1,7 +1,7 @@
 namespace CaptainCoder.DiceLang;
 public record FuncValue(string ParameterId, IExpression BodyExpr) : IExpression, IValue
 {
-    public Environment Scope { get; private set; } = null;
+    public Environment Scope { get; set; } = null;
     public IValue Evaluate(Environment env) 
     {
         this.Scope = env;
