@@ -3,11 +3,10 @@ namespace CaptainCoder.DiceLang;
 public interface IValue : IExpression
 {
     public ICastResult<int> ToInt();
-    public bool ToBool();
+    public ICastResult<bool> ToBool();
     public string PrettyPrint();
 }
 
-// public delegate ICastResult<T> Caster<T>(IExpression expr);
 public delegate ICastResult<OutT> NextAction<InT, OutT>(InT toPropogate);
 
 public interface ICastResult<T> 

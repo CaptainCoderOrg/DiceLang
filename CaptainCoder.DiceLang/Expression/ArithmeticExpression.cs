@@ -27,6 +27,19 @@ public static class OperatorHelpers
             _ => throw new NotImplementedException(),
         };
     }
+
+    public static IValue PerformOp(IValue left, IValue right, Func<bool, bool, bool> op)
+    {
+        ICastResult<bool> result = left.ToBool()
+            .Then((leftResult) => right.ToBool().Then((rightResult) => new CastSuccess<bool>(op(leftResult, rightResult))));
+
+        return result switch
+        {
+            CastError<bool>(string message) => new ErrorValue(message),
+            CastSuccess<bool>(bool value) => new BoolValue(value),
+            _ => throw new NotImplementedException(),
+        };
+    }
 }
 
 public sealed record AdditionExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)

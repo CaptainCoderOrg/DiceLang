@@ -7,6 +7,12 @@ public record IfElseExpression(IExpression Condition, IExpression TrueExpr, IExp
     public IValue Evaluate(Environment env)
     {
         IValue conditionResult = Condition.Evaluate(env);
-        return conditionResult.ToBool() ? TrueExpr.Evaluate(env) : FalseExpr.Evaluate(env);
+        ICastResult<bool> result = conditionResult.ToBool();
+        return result switch
+        {
+            CastError<bool>(string message) => new ErrorValue(message),
+            CastSuccess<bool>(bool value) => value ? TrueExpr.Evaluate(env) : FalseExpr.Evaluate(env),
+            _ => throw new NotImplementedException(),
+        };
     }
 }

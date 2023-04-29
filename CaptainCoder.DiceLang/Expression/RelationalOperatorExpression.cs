@@ -18,5 +18,5 @@ public record EqualityExpression(IExpression Left, IExpression Right) : BinaryOp
 {
     protected override BinaryExpressionConstructor Constructor => (left, right) => new EqualityExpression(left, right);
     public override IValue PerformOp(IValue left, IValue right) => 
-        OperatorHelpers.PerformOp(left, right, (a, b) => a == b);
+        OperatorHelpers.PerformOp(left, right, (int a, int b) => a == b);
 }
