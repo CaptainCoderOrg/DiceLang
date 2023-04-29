@@ -192,8 +192,8 @@ public class FuncExpressionTest
         in f (1)(2)
         ");
         Assert.True(result.WasSuccessful, $"Parse failed with '{result.Message}'");
-        IExpression functions = 
-            new FuncValue("x", 
+        IExpression functions =
+            new FuncValue("x",
                 new FuncValue("y", new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"))));
         IExpression expected =
         new LetExpression("f",
@@ -206,8 +206,8 @@ public class FuncExpressionTest
     [Fact]
     public void TestExecuteNestedFunctionApplication()
     {
-        IExpression functions = 
-            new FuncValue("x", 
+        IExpression functions =
+            new FuncValue("x",
                 new FuncValue("y", new AdditionExpression(new IdentifierValue("x"), new IdentifierValue("y"))));
         IExpression application =
             new ApplyFuncExpression(new ApplyFuncExpression(functions, new IntValue(1)), new IntValue(2));
@@ -223,13 +223,42 @@ public class FuncExpressionTest
         IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(toParse);
         Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
 
-        IExpression expected = 
+        IExpression expected =
             new AdditionExpression(
                 new ApplyFuncExpression(new IdentifierValue("exp"), new IntValue(2)),
                 new IntValue(7)
             );
-        Assert.Equal(expected, result.Value);        
+        Assert.Equal(expected, result.Value);
     }
 
+    [Fact]
+    public void TestMultiParamFuncParse()
+    {
+        // exp(2) + 7
+        string toParse = "fun(x, y) => 5";
+        IResult<IExpression> result = Parsers.FuncExpr.TryParse(toParse);
+        Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
 
+        IExpression expected =
+            new FuncValue("x",
+                new FuncValue("y", new IntValue(5)));
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void Test5MultiParamFuncParse()
+    {
+        // exp(2) + 7
+        string toParse = "fun(a, b, c, d, e) => 5";
+        IResult<IExpression> result = Parsers.FuncExpr.TryParse(toParse);
+        Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
+
+        IExpression expected =
+            new FuncValue("a",
+            new FuncValue("b",
+            new FuncValue("c",
+            new FuncValue("d",
+            new FuncValue("e", new IntValue(5))))));
+        Assert.Equal(expected, result.Value);
+    }
 }

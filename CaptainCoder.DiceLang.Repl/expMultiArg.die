@@ -1,4 +1,4 @@
-let exp = fun(base) => fun(power) => 
+let exp = fun(base, power) =>
     if power == 1 then 
        base 
     else 
