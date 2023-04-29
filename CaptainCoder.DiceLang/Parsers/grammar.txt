@@ -11,10 +11,11 @@ OrExpr ::= AndExpr (|| AndExpr)*
 AndExpr ::= BoolFactorExpr (&& BoolFactorExpr)*
 BoolFactorExpr ::= (OrExpr) | RelationalExpr | NotExpr | BoolValue
 NotExpr ::= ! OrExpr
-BoolValue ::= FuncApplyExpr | BoolId | Bool
+BoolValue ::= FuncApplyBool | BoolId | Bool
 RelationalExpr ::= ArithmeticExpression [<|>|==] ArithmeticExpression
 ConditionalExpr ::= OrExpr
 
+FuncApplyBool ::= FuncApplyExpr [Not(Operator)]
 BoolId ::= Id [Not(Operator)]
 
 ---
@@ -27,7 +28,7 @@ FuncApplyExpr ::= FuncFactor (Expr) [(Expr)]*
 
 FuncFactor ::= (FuncDefExpr) | Id
 
-Expr ::= FuncApplyExpr | ConditionalExpr | LetExpr | IfElseExpr | FuncDefExpr  | ArithmeticExpr
+Expr ::=  ConditionalExpr | ArithmeticExpr | FuncApplyExpr LetExpr | IfElseExpr | FuncDefExpr 
 
 
 

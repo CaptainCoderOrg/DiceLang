@@ -214,9 +214,21 @@ public class FuncExpressionTest
 
     }
 
-    /*
-    let f = fun(x) => fun(y) => x + y
-in f (1)(2)*/
+    [Fact]
+    public void TestApplicationInBinaryOperator()
+    {
+        // exp(2) + 7
+        string toParse = "exp(2) + 7";
+        IResult<IExpression> result = Parsers.DiceLangExpression.TryParse(toParse);
+        Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
+
+        IExpression expected = 
+            new AdditionExpression(
+                new ApplyFuncExpression(new IdentifierValue("exp"), new IntValue(2)),
+                new IntValue(7)
+            );
+        Assert.Equal(expected, result.Value);        
+    }
 
 
 }

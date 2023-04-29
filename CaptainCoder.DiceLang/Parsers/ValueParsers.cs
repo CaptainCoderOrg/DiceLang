@@ -64,8 +64,8 @@ public static partial class Parsers
     public static Parser<IExpression> BoolValueExpression =>
     BoolIdentifier.Or(BoolValue);
 
-    public static readonly string[] Operators = new string[]{"+", "-", "*", "/", "<", ">", "=="};
-    public static Parser<object> NotOperator()
+    public static readonly string[] Operators = new string[]{"+", "-", "*", "/", "<", ">", "==", "("};
+    public static Parser<object> NotOperator() 
     {
 
         Parser<object> parser = null;

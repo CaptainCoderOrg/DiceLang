@@ -5,11 +5,11 @@ public static partial class Parsers
 {
 
     public static Parser<IExpression> DiceLangExpressionInner =>
-            ApplyFuncExpr
-            .Or(ConditionalExpression)
-            .Or(LetExpr)
-            .Or(IfElseExpr)
+            ConditionalExpression
             .Or(ArithmeticExpression)
+            .Or(ApplyFuncExpr)
+            .Or(LetExpr)
+            .Or(IfElseExpr)            
             .Or(FuncExpr).Token();
 
     public static Parser<IExpression> DiceLangExpression => DiceLangExpressionInner.End();

@@ -39,8 +39,16 @@ public static partial class Parsers
         WithParenthesis(OrExpression)
         .Or(RelationalExpr)
         .Or(NotExpr)
-        .Or(ApplyFuncExpr)
+        .Or(FuncApplyBoolExpr)
         .Or(BoolValueExpression);
+
+    // public static Parser<IExpression> FuncApplyBoolExpr =>
+    //     ApplyFuncExpr 
+
+    public static Parser<IExpression> FuncApplyBoolExpr =>
+        from apply in ApplyFuncExpr.Token()
+        from _ in NotOperator()
+        select apply;
 
     public static Parser<IExpression> ConditionalExpression => OrExpression; 
 }
