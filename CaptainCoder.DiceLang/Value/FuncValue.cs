@@ -9,7 +9,7 @@ public record FuncValue(string ParameterId, IExpression BodyExpr) : IExpression,
     }
     // TODO: Might consider adding pretty print to IExpression
     public string PrettyPrint() => $"fun({ParameterId})";
-    public int ToInt() => throw new NotSupportedException();
+    public ICastResult<int> ToInt() => CastError<int>.Error($"Cannot cast FuncValue to int.");
     public bool ToBool() => throw new NotSupportedException();
 
 }

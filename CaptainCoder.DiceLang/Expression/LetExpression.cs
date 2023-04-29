@@ -22,8 +22,7 @@ public record LetExpression(string Label, IExpression ValueExpr, IExpression Bod
 public record IdentifierValue(string Label) : IExpression, IValue
 {
     public IValue Evaluate(Environment env) => env.Lookup(Label);
-
-    public int ToInt() => throw new NotSupportedException();
+    public ICastResult<int> ToInt() => CastError<int>.Error($"Cannot cast Identifier {Label} to int.");
     public bool ToBool() => throw new NotSupportedException();
     public string PrettyPrint() => Label;
 }

@@ -13,8 +13,8 @@ public class FuncExpressionTest
         IExpression func = new FuncValue("x", new AdditionExpression(new IdentifierValue("x"), new IntValue(1)));
         // f(7)
         IExpression apply = new ApplyFuncExpression(func, new IntValue(7));
-
-        Assert.Equal(8, apply.Evaluate(Environment.Empty).ToInt());
+        IExpression expected = new IntValue(8);
+        Assert.Equal(expected, apply.Evaluate(Environment.Empty));
     }
 
     [Fact]
@@ -36,7 +36,8 @@ public class FuncExpressionTest
         new LetExpression("x", new IntValue(5),
             new LetExpression("f", new FuncValue("x", new AdditionExpression(new IdentifierValue("x"), new IntValue(1))),
                     new ApplyFuncExpression(new IdentifierValue("f"), new IntValue(1))));
-        Assert.Equal(2, expression.Evaluate(Environment.Empty).ToInt());
+        IExpression expected = new IntValue(2);
+        Assert.Equal(expected, expression.Evaluate(Environment.Empty));
     }
 
     [Fact]
