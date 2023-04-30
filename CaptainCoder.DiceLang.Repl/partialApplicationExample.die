@@ -1,0 +1,3 @@
+let add = fun(x, y) => x + y in 
+let addFive = add(5) in
+addFive(8)

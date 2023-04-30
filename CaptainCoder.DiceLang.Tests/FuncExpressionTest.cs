@@ -261,4 +261,41 @@ public class FuncExpressionTest
             new FuncValue("e", new IntValue(5))))));
         Assert.Equal(expected, result.Value);
     }
+
+    [Fact]
+    public void TestMultiArgApplyFunc()
+    {
+        // exp(2) + 7
+        string toParse = "f(5, 6)";
+        IResult<IExpression> result = Parsers.ApplyFuncExpr.TryParse(toParse);
+        Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
+
+        IExpression expected =
+            new ApplyFuncExpression(
+                new ApplyFuncExpression(new IdentifierValue("f"), new IntValue(5)), 
+                new IntValue(6));
+
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void Test4ArgApplyFunc()
+    {
+        // exp(2) + 7
+        string toParse = "f(5, 6, 7, 8)";
+        IResult<IExpression> result = Parsers.ApplyFuncExpr.TryParse(toParse);
+        Assert.True(result.WasSuccessful, $"Failed to parse with '{result.Message}'");
+
+        IExpression expected =
+        new ApplyFuncExpression(
+            new ApplyFuncExpression(
+                new ApplyFuncExpression(
+                    new ApplyFuncExpression(new IdentifierValue("f"), 
+                    new IntValue(5)), 
+                new IntValue(6)),
+            new IntValue(7)),
+        new IntValue(8));
+
+        Assert.Equal(expected, result.Value);
+    }
 }
