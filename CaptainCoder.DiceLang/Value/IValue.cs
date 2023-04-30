@@ -3,6 +3,7 @@ namespace CaptainCoder.DiceLang;
 public interface IValue : IExpression
 {
     public ICastResult<int> ToInt();
+    public ICastResult<double> ToDouble();
     public ICastResult<bool> ToBool();
     public string PrettyPrint();
 }
