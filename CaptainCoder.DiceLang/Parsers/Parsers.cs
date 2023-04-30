@@ -9,8 +9,9 @@ public static partial class Parsers
             .Or(ArithmeticExpression)
             .Or(ApplyFuncExpr)
             .Or(LetExpr)
-            .Or(IfElseExpr)            
-            .Or(FuncExpr).Token();
+            .Or(IfElseExpr)         
+            .Or(FuncExpr)
+            .Or(ListExpr).Token();
 
     public static Parser<IExpression> DiceLangExpression => DiceLangExpressionInner.End();
 }
