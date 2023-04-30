@@ -2,6 +2,7 @@ namespace CaptainCoder.DiceLang;
 
 public static class OperatorHelpers
 {
+
     public static IValue PerformOp(IValue left, IValue right, Func<int, int, int> op)
     {
         ICastResult<int> result = left.ToInt()
@@ -46,7 +47,7 @@ public sealed record AdditionExpression(IExpression Left, IExpression Right) : B
 {
     protected override BinaryExpressionConstructor Constructor => (left, right) => new AdditionExpression(left, right);
     public override IValue PerformOp(IValue left, IValue right) =>
-        OperatorHelpers.PerformOp(left, right, (a, b) => a + b);
+        ArithmeticHelpers.PerformAddition(left, right);
 }
 
 
@@ -55,19 +56,19 @@ public sealed record SubtractionExpression(IExpression Left, IExpression Right) 
 {
     protected override BinaryExpressionConstructor Constructor => (left, right) => new SubtractionExpression(left, right);
     public override IValue PerformOp(IValue left, IValue right) =>
-        OperatorHelpers.PerformOp(left, right, (a, b) => a - b);
+        ArithmeticHelpers.PerformSubtraction(left, right);
 }
 
 public sealed record MultiplicationExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
 {
     protected override BinaryExpressionConstructor Constructor => (left, right) => new MultiplicationExpression(left, right);
     public override IValue PerformOp(IValue left, IValue right) =>
-        OperatorHelpers.PerformOp(left, right, (a, b) => a * b);
+        ArithmeticHelpers.PerformMultiplication(left, right);
 }
 
 public sealed record DivisionExpression(IExpression Left, IExpression Right) : BinaryOperatorExpression(Left, Right)
 {
     protected override BinaryExpressionConstructor Constructor => (left, right) => new DivisionExpression(left, right);
-    public override IValue PerformOp(IValue left, IValue right) =>
-        OperatorHelpers.PerformOp(left, right, (a, b) => a / b);
+    public override IValue PerformOp(IValue left, IValue right) => ArithmeticHelpers.PerformDivision(left, right);
+        
 }

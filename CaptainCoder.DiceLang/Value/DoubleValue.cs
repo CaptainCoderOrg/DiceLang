@@ -6,6 +6,4 @@ public record DoubleValue(double Value) : IExpression, IValue
     public ICastResult<double> ToDouble() => new CastSuccess<double>(Value);
     public string PrettyPrint() => Value.ToString();
     public ICastResult<bool> ToBool() => CastError<bool>.Error($"Cannot cast Int to Bool.");
-
-    
 }

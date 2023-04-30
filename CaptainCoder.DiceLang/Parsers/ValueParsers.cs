@@ -11,6 +11,12 @@ public static partial class Parsers
         from value in Parse.Digit.AtLeastOnce().Token()
         select new IntValue(int.Parse(string.Join("", value)));
 
+    public static Parser<DoubleValue> DoubleValue =>
+        from left in Parse.Digit.AtLeastOnce().Token()
+        from dot in Parse.Char('.')
+        from right in Parse.Digit.AtLeastOnce().Token()
+        select new DoubleValue(double.Parse(string.Join("", left) + "." + string.Join("", right)));
+
     public static Parser<DiceGroupExpression> DiceGroupExpression =>
         from leading in Parse.WhiteSpace.Many()
         from diceCount in Parse.Digit.AtLeastOnce()
@@ -94,7 +100,8 @@ public static partial class Parsers
 
     public static Parser<IExpression> NumericValueExpression =>
     (DiceGroupExpression as Parser<IExpression>)
-    .Or(IntValue)
+    .Or(DoubleValue)
+    .Or(IntValue)    
     .Or(IdentifierExpr);
 
 }
