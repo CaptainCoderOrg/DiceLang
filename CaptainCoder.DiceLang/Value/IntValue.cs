@@ -6,7 +6,6 @@ public record IntValue(int Value) : IExpression, INumericValue
     public ICastResult<double> ToDouble() => new CastSuccess<double>(Value);
     public string PrettyPrint() => Value.ToString();
     public ICastResult<bool> ToBool() => CastError<bool>.Error($"Cannot cast Int to Bool.");
-
     public INumericValue Add(INumericValue other)
     {
         return other switch

@@ -1,7 +1,8 @@
 namespace CaptainCoder.DiceLang;
 public static class ArithmeticHelpers
 {
-    public static IValue PerformOp(IValue leftVal, IValue rightVal, Func<INumericValue, INumericValue, INumericValue> op, string opName)
+    public delegate T BinOp<T>(T a, T b);
+    public static IValue PerformOp(IValue leftVal, IValue rightVal, BinOp<INumericValue> op, string opName)
     {
         return (leftVal, rightVal) switch
         {

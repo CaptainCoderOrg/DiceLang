@@ -94,9 +94,6 @@ public static partial class Parsers
         }
         return parser.Not();
     }
-    
-        
-        // ("[+|-|*|/|<|>|==]").Token();
 
     public static Parser<IExpression> BoolIdentifier =>
         from id in IdentifierExpr.Token()
