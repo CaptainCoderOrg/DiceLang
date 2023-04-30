@@ -7,7 +7,6 @@ public interface IValue : IExpression
     public ICastResult<bool> ToBool();
     public string PrettyPrint();
 }
-
 public delegate ICastResult<OutT> NextAction<InT, OutT>(InT toPropogate);
 
 public interface ICastResult<T> 

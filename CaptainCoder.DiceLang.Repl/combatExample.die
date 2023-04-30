@@ -1,0 +1,4 @@
+let attack = fun(strength, defense) => if 1d20 > defense then strength else 0 in
+let enemyDefense = 5 in
+let playerAttack = attack(10) in
+playerAttack(5)

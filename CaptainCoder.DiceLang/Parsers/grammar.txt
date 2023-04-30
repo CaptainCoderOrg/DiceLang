@@ -1,7 +1,7 @@
 AddSubExpr ::= MulDivExpr ([+|-] MulDivExpr)*
 MulDivExpr ::= ArithFactorExpr ([*|/] ArithFactorExpr)*
 ArithFactorExpr ::= (AddSubExpr) | NumericValue
-NumericValue ::= FuncApplyExpr | Id | DiceGroup | Int
+NumericValue ::= FuncApplyExpr | Id | DiceGroup | Char | Double | Int
 
 ArithmeticExpression ::= AddSubExpr
 
@@ -12,7 +12,7 @@ AndExpr ::= BoolFactorExpr (&& BoolFactorExpr)*
 BoolFactorExpr ::= (OrExpr) | RelationalExpr | NotExpr | BoolValue
 NotExpr ::= ! OrExpr
 BoolValue ::= FuncApplyBool | BoolId | Bool
-RelationalExpr ::= ArithmeticExpression [<|>|==] ArithmeticExpression
+RelationalExpr ::= ArithmeticExpression [<|>|==|<=|>=|!=] ArithmeticExpression
 ConditionalExpr ::= OrExpr
 
 FuncApplyBool ::= FuncApplyExpr [Not(Operator)]

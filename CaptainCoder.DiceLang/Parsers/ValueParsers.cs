@@ -3,6 +3,13 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
+    public static Parser<CharValue> CharValue =>
+        from leadingSpace in Parse.WhiteSpace.Many()
+        from singleQuote in Parse.Char('\'')
+        from character in Parse.AnyChar
+        from endQuote in Parse.Char('\'')
+        select new CharValue(character);
+
     public static Parser<IExpression> BoolValue =>
         from value in Parse.String("true").Or(Parse.String("false")).Token()
         select new BoolValue(string.Join("", value) == "true");
@@ -55,8 +62,6 @@ public static partial class Parsers
         }
         return parser.Not();
     }
-        
-    // ReservedKeywords.Aggregate(Parse.String("foo").Token(), (string left, string right) => Parse.String(left).Token());
     
     public static Parser<string> IdentifierString =>
         from id in Parse.Letter.AtLeastOnce().Token()
@@ -101,7 +106,8 @@ public static partial class Parsers
     public static Parser<IExpression> NumericValueExpression =>
     (DiceGroupExpression as Parser<IExpression>)
     .Or(DoubleValue)
-    .Or(IntValue)    
+    .Or(IntValue)
+    .Or(CharValue)
     .Or(IdentifierExpr);
 
 }
