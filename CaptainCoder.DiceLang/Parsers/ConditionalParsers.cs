@@ -3,13 +3,13 @@ namespace CaptainCoder.DiceLang;
 
 public static partial class Parsers
 {
-    // public static Parser<IExpression> RelationalExpr => 
-        // WithParenthesis(RelationalExprInner)
-        // .Or(RelationalExprInner);
     public static Parser<IExpression> RelationalExpr =>
         GreaterThanExpression
         .Or(LessThanExpression)
-        .Or(EqualityExpression);
+        .Or(GreaterThanOrEqualToExpression)
+        .Or(LessThanOrEqualToExpression)
+        .Or(EqualityExpression)
+        .Or(NotEqualityExpression);
     private static Parser<IExpression> ConditionalExprHelper(string symbol, Func<IExpression, IExpression, IExpression> constructor)
     {
         return
@@ -21,9 +21,21 @@ public static partial class Parsers
     public static Parser<IExpression> GreaterThanExpression =>
         ConditionalExprHelper(">", (left, right) => new GreaterThanExpression(left, right));
 
+    public static Parser<IExpression> GreaterThanOrEqualToExpression =>
+        ConditionalExprHelper(">=", (left, right) => 
+            new OrExpression(new GreaterThanExpression(left, right), new EqualityExpression(left, right)));
+
     public static Parser<IExpression> LessThanExpression =>
         ConditionalExprHelper("<", (left, right) => new LessThanExpression(left, right));
 
+    public static Parser<IExpression> LessThanOrEqualToExpression =>
+        ConditionalExprHelper("<=", (left, right) => 
+            new OrExpression(new LessThanExpression(left, right), new EqualityExpression(left, right)));
+
     public static Parser<IExpression> EqualityExpression =>
         ConditionalExprHelper("==", (left, right) => new EqualityExpression(left, right));
+
+    public static Parser<IExpression> NotEqualityExpression =>
+        ConditionalExprHelper("!=", (left, right) => 
+            new NotExpression(new EqualityExpression(left, right)));
 }

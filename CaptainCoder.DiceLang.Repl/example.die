@@ -1,10 +1,10 @@
 let max = fun(x) => fun(y) => if x > y then x else y in
 let min = fun(x) => fun(y) => if x < y then x else y in
-let roll = fun(x) => 3d6 in
+let roll = fun(x) => 3d6 + x in
 let exp = fun(base) => fun(power) => 
     if power == 1 
     then 
        base 
     else 
        base * exp(base)(power - 1)
-in exp(5)(2)
+in roll(7)

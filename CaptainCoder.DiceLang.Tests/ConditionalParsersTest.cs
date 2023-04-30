@@ -42,4 +42,51 @@ public class ConditionalParsersTest
         Assert.True(resultExpr.WasSuccessful);
         Assert.Equal(gtExpr, resultExpr.Value);
     }
+
+    [Theory]
+    [InlineData(3, 5)]
+    [InlineData(2, 1)]
+    [InlineData(7, 7)]
+    [InlineData(5, 7)]
+    public void TestGreaterThanOrEqualParser(int left, int right)
+    {
+        IntValue leftVal = new (left);
+        IntValue rightVal = new (right);
+        IResult<IExpression> resultExpr = Parsers.DiceLangExpression.TryParse($"{left} >= {right}");
+        Assert.True(resultExpr.WasSuccessful);
+        IExpression expected = new BoolValue(left >= right);
+        Assert.Equal(expected, resultExpr.Value.Evaluate(Environment.Empty));
+    }
+
+    [Theory]
+    [InlineData(3, 5)]
+    [InlineData(2, 1)]
+    [InlineData(7, 7)]
+    [InlineData(5, 7)]
+    public void TestLessThanOrEqualParser(int left, int right)
+    {
+        IntValue leftVal = new (left);
+        IntValue rightVal = new (right);
+        IResult<IExpression> resultExpr = Parsers.DiceLangExpression.TryParse($"{left} <= {right}");
+        Assert.True(resultExpr.WasSuccessful);
+        IExpression expected = new BoolValue(left <= right);
+        Assert.Equal(expected, resultExpr.Value.Evaluate(Environment.Empty));
+    }
+
+    [Theory]
+    [InlineData(3, 5)]
+    [InlineData(2, 1)]
+    [InlineData(7, 7)]
+    [InlineData(5, 7)]
+    public void TestNotEqualParser(int left, int right)
+    {
+        IntValue leftVal = new (left);
+        IntValue rightVal = new (right);
+        IResult<IExpression> resultExpr = Parsers.DiceLangExpression.TryParse($"{left} != {right}");
+        Assert.True(resultExpr.WasSuccessful);
+        IExpression expected = new BoolValue(left != right);
+        Assert.Equal(expected, resultExpr.Value.Evaluate(Environment.Empty));
+    }
+
+    
 }
